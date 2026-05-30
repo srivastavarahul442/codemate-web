@@ -24,7 +24,7 @@ const Login = () => {
           withCredentials: true,
         },
       );
-      console.log("Login successful:", res.data);
+      // console.log("Login successful:", res.data);
       dispatch(addUser(res.data));
       return navigate("/");
     } catch (err) {
