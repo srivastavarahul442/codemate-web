@@ -1,18 +1,28 @@
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("rahul@gmail.com");
-  const [password, setPassword] = useState("Rahul@123");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store) => store.user);
 
-  const login = async () => {
+  const [signUpForm, setSignUpForm] = useState(false);
+
+  // if(user){
+  //   return navigate("/")
+  // }
+
+  const handleLogin = async () => {
+    setErrorMessage("");
     try {
       const res = await axios.post(
         BASE_URL + "/login",
@@ -22,58 +32,91 @@ const Login = () => {
         },
         {
           withCredentials: true,
-        },
+        }
       );
-      // console.log("Login successful:", res.data);
+      // console.log(res)
       dispatch(addUser(res.data));
       return navigate("/");
     } catch (err) {
-      setErrorMessage(err?.response?.data|| "Login failed. Please try again.");
-      console.error(err);
+      setErrorMessage(err?.response?.data || "Somthing went Wrong");
+    }
+  };
+
+  const handleSignup = async () => {
+    
+    try {
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        {
+          firstName,
+          lastName,
+          emailId,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(addUser(res?.data?.data));
+      
+      setErrorMessage("");
+    setEmailId("");
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+      return navigate("/profile");
+    } catch (err) {
+      setErrorMessage(err?.response?.data || "Somthing went Wrong");
     }
   };
 
   return (
-    <div className="flex justify-center my-10">
-      <div className="card bg-base-300 w-96 shadow-sm">
+    <div>
+      <div className="card bg-base-300 w-96 shadow-xl flex mx-auto my-10">
         <div className="card-body">
-          <h2 className="card-title justify-center">Login</h2>
+          <h2 className="card-title justify-center text-2xl">
+            {signUpForm ? "Sign Up" : "Log In"}
+          </h2>
           <div>
-            {/* <label className="input input-bordered flex items-center gap-2 my-3 w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-              </svg>
-              <input
-                type="text"
-                className="grow"
-                placeholder="First Name"
-                // value={firstName}
-                // onChange={(e) => setFirstName(e.target.value)}
-              />
-            </label>
-            <label className="input input-bordered flex items-center gap-2 my-3 w-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                className="h-4 w-4 opacity-70"
-              >
-                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-              </svg>
-              <input
-                type="text"
-                className="grow"
-                placeholder="Last Name"
-                // value={lastName}
-                // onChange={(e) => setLastName(e.target.value)}
-              />
-            </label> */}
-            <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+            {signUpForm && (
+              <div>
+                <label className="input input-bordered flex items-center gap-2 my-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70"
+                  >
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                  </svg>
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </label>
+                <label className="input input-bordered flex items-center gap-2 my-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="h-4 w-4 opacity-70"
+                  >
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                  </svg>
+                  <input
+                    type="text"
+                    className="grow"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </label>
+              </div>
+            )}
+            <label className="input input-bordered flex items-center gap-2 my-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -91,7 +134,7 @@ const Login = () => {
                 onChange={(e) => setEmailId(e.target.value)}
               />
             </label>
-            <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+            <label className="input input-bordered flex items-center gap-2 my-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
@@ -113,12 +156,54 @@ const Login = () => {
               />
             </label>
           </div>
-          <p className="text-red-500">{errorMessage}</p>
-          <div className="card-actions justify-center">
-            <button className="btn btn-primary" onClick={login}>
-              Login
-            </button>
+
+          <div className="card-actions justify-end mx-auto">
+            <p className="text-red-600 flex justify-center">{errorMessage}</p><br />
+            {signUpForm ? (
+              <button
+                className="btn btn-primary w-40 text-xl  my-1 mx-auto"
+                onClick={handleSignup}
+              >
+                Sign Up
+              </button>
+            ) : (
+              <button
+                className="btn btn-primary w-40 text-xl  my-1 mx-auto"
+                onClick={handleLogin}
+              >
+                Log In
+              </button>
+            )}
           </div>
+          {signUpForm ? (
+            <p>
+              Already have an account?{" "}
+              <button
+                className="cursor-pointer font-bold underline"
+                onClick={() => {
+                  setSignUpForm(false);
+                  setErrorMessage("");
+                }}
+              >
+                {" "}
+                Log In now.
+              </button>
+            </p>
+          ) : (
+            <p>
+              New to 👩‍💻CodeMate👨‍💻?{" "}
+              <button
+                className="cursor-pointer font-bold underline"
+                onClick={() => {
+                  setSignUpForm(true);
+                  setErrorMessage("");
+                }}
+              >
+                {" "}
+                Sign up now.
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </div>
