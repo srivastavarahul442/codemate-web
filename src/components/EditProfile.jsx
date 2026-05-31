@@ -30,7 +30,7 @@ const EditProfile = ({ user }) => {
         setShowToast(false);
       }, 3000);
     } catch (err) {
-      setErrorMessage(err.message);
+      setErrorMessage(err.response?.data || "An error occurred while saving the profile.");
     }
   };
 
@@ -40,61 +40,65 @@ const EditProfile = ({ user }) => {
         <div className="card bg-base-300 w-96 shadow-sm">
           <div className="card-body">
             <h2 className="card-title justify-center">Edit Profile</h2>
-            <div>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">First Name</label>
                 <input
                   type="text"
-                  className="grow"
-                  placeholder="First Name"
+                  className="input input-bordered w-full"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
-              </label>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Last Name</label>
                 <input
                   type="text"
-                  className="grow"
-                  placeholder="Last Name"
+                  className="input input-bordered w-full"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
-              </label>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Age</label>
                 <input
                   type="text"
-                  className="grow"
-                  placeholder="Age"
+                  className="input input-bordered w-full"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                 />
-              </label>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="Gender"
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Gender</label>
+                <select
+                  className="select select-bordered w-full"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                />
-              </label>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
-                <input
-                  type="text"
-                  className="grow"
-                  placeholder="About"
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">About</label>
+                <textarea
+                  className="textarea textarea-bordered w-full"
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
+                  rows={4}
                 />
-              </label>
-              <label className="input input-bordered flex items-center gap-2 my-3 w-full">
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Photo URL</label>
                 <input
                   type="text"
-                  className="grow"
-                  placeholder="Photo URL"
+                  className="input input-bordered w-full"
                   value={photoUrl}
                   onChange={(e) => setPhotoUrl(e.target.value)}
                 />
-              </label>
+              </div>
             </div>
             <p className="text-red-500">{errorMessage}</p>
             <div className="card-actions justify-center">
