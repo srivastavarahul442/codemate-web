@@ -14,7 +14,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
-  console.log("VITE_BASE_URL:", import.meta.env.VITE_BASE_URL);
 
   const [signUpForm, setSignUpForm] = useState(false);
 
