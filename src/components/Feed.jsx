@@ -4,9 +4,15 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
 import UserCard from "./UserCard";
+import { useNavigate } from "react-router-dom";
 const Feed = () => {
   const dispatch = useDispatch();
   const feed = useSelector((store) => store.feed);
+  const navigate = useNavigate();
+  
+  const loggedInUser = useSelector((store) => store.user);
+  
+  // console.log("loggedInUser", loggedInUser);
 
   const getFeed = async () => {
     try {
@@ -21,9 +27,11 @@ const Feed = () => {
   };
 
   useEffect(() => {
+    if(!loggedInUser) return navigate("/login");
     getFeed();
   }, []);
 
+  
   if(!feed) return 
   if(feed.length === 0) return (
     <div className="flex justify-center my-5">

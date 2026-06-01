@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom"; 
+import { removeFeed } from "../utils/feedSlice";
+import { removeConnection } from "../utils/connectionSlice";
 
 const NavBar = () => {
   const user = useSelector((state) => state.user);
@@ -14,6 +16,8 @@ const NavBar = () => {
     try {
       await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
       dispatch(removeUser());
+      dispatch(removeFeed());
+      dispatch(removeConnection());
       navigate("/login")
     } catch (err) {
       console.error("Logout failed:", err);
@@ -24,7 +28,7 @@ const NavBar = () => {
     <div className="navbar bg-base-300 shadow-sm">
       <div className="flex-1">
         <Link to={"/"} className="btn btn-ghost text-xl">
-          CodeMate
+          👩‍💻CodeMate👨‍💻
         </Link>
       </div>
       {user && (
